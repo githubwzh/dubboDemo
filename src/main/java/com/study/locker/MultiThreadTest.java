@@ -13,7 +13,7 @@ public class MultiThreadTest {
     private static int counter = 0;
 
     // 多线程环境下，会出现并发问题
-    public static void plus() {
+    public static synchronized void  plus() {
 
         // 计数器加一
         counter++;
