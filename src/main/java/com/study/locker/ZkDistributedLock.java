@@ -42,7 +42,8 @@ public class ZkDistributedLock {
         @Override
         public void run() {
 
-            for (int i = 0; i < 20; i++) {
+
+            for (int i = 0; i < 10; i++) {
 
                 // 访问计数器之前需要先获取锁
                 String path = getLock();
@@ -66,8 +67,7 @@ public class ZkDistributedLock {
                     // 创建EPHEMERAL_SEQUENTIAL类型节点
                     String lockPath = zkClient.create(LOCK_ROOT_PATH + "/" + LOCK_NODE_NAME,
                             Thread.currentThread().getName().getBytes(), Ids.OPEN_ACL_UNSAFE,
-                            CreateMode.PERSISTENT_SEQUENTIAL);
-//           String lockPath =    zkClient.create("/myName", "chenlongfei".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                            CreateMode.EPHEMERAL_SEQUENTIAL);
                 System.out.println(Thread.currentThread().getName() + " create path : " + lockPath);
 
                 // 尝试获取锁
@@ -88,7 +88,6 @@ public class ZkDistributedLock {
             // 获取LOCK_ROOT_PATH下所有的子节点，并按照节点序号排序
             List<String> lockPaths = zkClient.getChildren(LOCK_ROOT_PATH, false);
             Collections.sort(lockPaths);
-
             int index = lockPaths.indexOf(lockPath.substring(LOCK_ROOT_PATH.length() + 1));
             if (index == 0) { // lockPath是序号最小的节点，则获取锁
                 System.out.println(Thread.currentThread().getName() + " get lock, lockPath: " + lockPath);
@@ -99,9 +98,9 @@ public class ZkDistributedLock {
                 Watcher watcher = new Watcher() {
                     @Override
                     public void process(WatchedEvent event) {
-                        System.out.println(event.getPath() + " has been deleted");
+                        System.out.println(event.getPath() + "******** has been deleted");
                         synchronized (this) {
-                            notifyAll();
+                            notify();
                         }
                     }
                 };
