@@ -12,6 +12,7 @@ import org.apache.zookeeper.data.Stat;
 public class ZkTest {
 
     private static final String CONNECT_STRING = "127.0.0.1:2181";
+    private static final String CONNECT_STRING_All = "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183";
     private static final int SESSION_TIMEOUT = 3000;
 
     public static void main(String[] args) throws Exception {
@@ -29,8 +30,7 @@ public class ZkTest {
         // 1、要连接的服务器地址，"IP:port"格式；
         // 2、会话超时时间
         // 3、节点变化监视器
-        ZooKeeper zk = new ZooKeeper(CONNECT_STRING, SESSION_TIMEOUT, allChangeWatcher);
-
+        ZooKeeper zk = new ZooKeeper(CONNECT_STRING_All, SESSION_TIMEOUT, allChangeWatcher);
         // 新建节点。四个参数：1、节点路径；2、节点数据；3、节点权限；4、创建模式
         zk.create("/myName", "chenlongfei".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         System.out.println("create new node '/myName'");

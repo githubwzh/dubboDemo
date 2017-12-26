@@ -173,7 +173,7 @@ public class ZkDistributedLock {
     }
 
     public static void setZkClient(CountPlus thread) throws Exception {
-        ZooKeeper zkClient = new ZooKeeper("127.0.0.1:2181", 3000, null);
+        ZooKeeper zkClient = new ZooKeeper("127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183", 3000, null);
         thread.setZkClient(zkClient);
         Stat stat = zkClient.exists(thread.LOCK_ROOT_PATH ,false);
         if(stat == null){
